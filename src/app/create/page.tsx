@@ -16,6 +16,7 @@ import {
   Shield, 
   Wallet,
   Loader2,
+  PlusCircle,
 } from 'lucide-react';
 import type { CreateProductFormData, FileCategory, UploadType, Visibility } from '@/types';
 import Link from 'next/link';
@@ -146,9 +147,103 @@ export default function Create() {
 
   if (!connected) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h1 className="text-2xl mb-4">Please connect your wallet first</h1>
-        <WalletMultiButton />
+      <div className="w-[97%] mx-auto my-6">
+        <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#dddddd]">
+          <div className="flex flex-col gap-8">
+            {/* Hero Section */}
+            <div className="bg-[#EE2B69] rounded-3xl p-16 text-center text-white">
+              <h1 className="text-7xl font-black tracking-tight mb-4">
+                START SELLING DIGITAL GOODS
+              </h1>
+              <p className="text-2xl font-medium max-w-3xl mx-auto mb-8">
+                Connect your wallet to start selling digital products and earn in Solana
+              </p>
+              <WalletMultiButton className="!bg-white !text-black hover:!bg-gray-100 !transition-colors !text-xl !py-4 !px-8 !rounded-2xl !font-bold" />
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="bg-white border-[5px] border-black rounded-[22px] p-8 hover:shadow-[8px_8px_0px_0px_#EE2B69] transition-all">
+                <div className="size-16 rounded-full bg-[#EE2B69] flex items-center justify-center mb-6">
+                  <FileIcon className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Any Digital File</h3>
+                <p className="text-gray-600 text-lg">Sell images, videos, software, documents, or any other digital content</p>
+              </div>
+
+              <div className="bg-white border-[5px] border-black rounded-[22px] p-8 hover:shadow-[8px_8px_0px_0px_#EE2B69] transition-all">
+                <div className="size-16 rounded-full bg-[#EE2B69] flex items-center justify-center mb-6">
+                  <Shield className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Secure & Anonymous</h3>
+                <p className="text-gray-600 text-lg">Your files are securely stored and transactions are anonymous</p>
+              </div>
+
+              <div className="bg-white border-[5px] border-black rounded-[22px] p-8 hover:shadow-[8px_8px_0px_0px_#EE2B69] transition-all">
+                <div className="size-16 rounded-full bg-[#EE2B69] flex items-center justify-center mb-6">
+                  <Wallet className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="text-2xl font-bold mb-2">Zero Platform Fees</h3>
+                <p className="text-gray-600 text-lg">Keep 100% of your earnings - no hidden fees or charges</p>
+              </div>
+            </div>
+
+            {/* How It Works */}
+            <div className="bg-gray-50 rounded-3xl p-12">
+              <h2 className="text-4xl font-bold mb-8 text-center">How It Works</h2>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div className="flex flex-col items-center text-center">
+                  <div className="size-12 rounded-full bg-[#EE2B69] text-white text-2xl font-bold flex items-center justify-center mb-4">1</div>
+                  <h3 className="text-xl font-bold mb-2">Connect Wallet</h3>
+                  <p className="text-gray-600">Connect your Solana wallet to get started</p>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="size-12 rounded-full bg-[#EE2B69] text-white text-2xl font-bold flex items-center justify-center mb-4">2</div>
+                  <h3 className="text-xl font-bold mb-2">Upload & Price</h3>
+                  <p className="text-gray-600">Upload your digital product and set your price</p>
+                </div>
+                <div className="flex flex-col items-center text-center">
+                  <div className="size-12 rounded-full bg-[#EE2B69] text-white text-2xl font-bold flex items-center justify-center mb-4">3</div>
+                  <h3 className="text-xl font-bold mb-2">Start Earning</h3>
+                  <p className="text-gray-600">Share your product link and earn in SOL</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Section */}
+            <div className="bg-[#f7fa3e] px-10 py-8 rounded-3xl">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="space-y-4">
+                  <h2 className="text-5xl font-bold text-black">Ready to Start?</h2>
+                  <p className="text-black/80 text-xl max-w-2xl">
+                    Join the future of digital commerce on Solana.
+                    <br />
+                    Secure, decentralized, and fee-free transactions.
+                  </p>
+                  <div className="flex gap-4">
+                    <WalletMultiButton className="!bg-[#ff99cc] !text-black hover:!bg-[#ff80bf] !transition-colors !py-3 !px-6 !rounded-full !font-medium !text-lg" />
+                    <Link href="/marketplace">
+                      <button className="bg-black text-white py-2.5 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
+                        Browse Marketplace
+                      </button>
+                    </Link>
+                  </div>
+                </div>
+                <div className="w-full max-w-xs">
+                  <div className="aspect-square rounded-2xl backdrop-blur-sm flex items-center justify-center">
+                    <Image 
+                      src="/nect-logo.png" 
+                      alt="NECT" 
+                      width={500} 
+                      height={500}
+                      className="w-full h-auto" 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
@@ -503,7 +598,7 @@ export default function Create() {
                         secure, decentralized, and fee-free transactions for creators and buyers.
                       </p>
                       <Link href="/marketplace">
-                        <button className="bg-black text-white px-8 py-4 rounded-[10px] font-medium text-2xl cursor-pointer hover:bg-fuchsia-300 hover:text-black transition-colors">
+                        <button className="bg-black text-white py-3 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
                           Go to Marketplace
                         </button>
                       </Link>
