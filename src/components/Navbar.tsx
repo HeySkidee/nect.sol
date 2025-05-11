@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { prisma } from "@/lib/prisma";
 import dynamic from 'next/dynamic';
+import Image from "next/image";
 
 // Dynamically import WalletMultiButton with ssr disabled
 const WalletMultiButtonDynamic = dynamic(
@@ -65,8 +66,8 @@ function Navbar() {
     return (
         <nav className="sticky top-6 z-50 py-2 pb-2.5 bg-white w-[97%] mx-auto mb-12 rounded-2xl border-[#dddddd] border-2 ">
             <div className="px-4 flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold">
-                    NECT
+                <Link href="/" className="text-2xl font-bold flex items-center gap-2">
+                    <Image src="/nect-logo.png" alt="NECT" width={35} height={35} /> NECT
                 </Link>
 
                 <div className="flex items-center gap-6 font-medium">
