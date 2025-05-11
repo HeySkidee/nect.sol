@@ -60,29 +60,31 @@ export async function PUT(
         const { id } = await context.params;
         const data = await request.json();
         
-        // Verify the product exists
+        // Verify product exists
         const existingProduct = await prisma.product.findUnique({
             where: { id },
             include: { creator: true }
         });
 
         if (!existingProduct) {
-            return NextResponse.json({ error: 'Product not found' }, { status: 404 });
-        }
-
-        // Get the current user's public key from cookies
-        const cookieStore = await cookies();
-        const currentUserPublicKey = cookieStore.get('publicKey')?.value;
-
-        // Only allow the creator to update the product
-        if (!currentUserPublicKey || currentUserPublicKey !== existingProduct.creator.publicKey) {
             return NextResponse.json(
-                { error: "Unauthorized" },
-                { status: 403 }
+                { error: 'Product not found' },
+                { status: 404 }
             );
         }
 
-        // Update the product
+        // Verify ownership
+        const cookieStore = await cookies();
+        const publicKey = cookieStore.get('publicKey')?.value;
+
+        if (!publicKey || existingProduct.creator.publicKey !== publicKey) {
+            return NextResponse.json(
+                { error: 'Unauthorized' },
+                { status: 401 }
+            );
+        }
+
+        // Update product
         const updatedProduct = await prisma.product.update({
             where: { id },
             data: {
