@@ -21,6 +21,7 @@ import {
     DrawerClose,
 } from "@/components/ui/drawer";
 import DownloadModal from '@/components/DownloadModal';
+import Image from 'next/image';
 
 interface Product {
     id: string;
@@ -71,6 +72,11 @@ export default function ProductPage() {
         fileName: string;
         fileType: string;
     } | null>(null);
+
+    // Scroll to top when component mounts
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -220,21 +226,29 @@ export default function ProductPage() {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center min-h-screen">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-emerald-500"></div>
+            <div className="w-[97%] mx-auto mt-10">
+                <div className="bg-white p-8 rounded-3xl border-2 border-[#dddddd] min-h-[calc(100vh-8rem)]">
+                    <div className="flex justify-center items-center h-full">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-[#f7fa3e]"></div>
+                    </div>
+                </div>
             </div>
         );
     }
 
     if (error || !product) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen">
-                <h1 className="text-2xl font-bold text-red-500 mb-4">
-                    {error || 'Product not found'}
-                </h1>
-                <p className="text-gray-600">
-                    The product you're looking for might have been removed or is private.
-                </p>
+            <div className="w-[97%] mx-auto mt-10">
+                <div className="bg-white p-8 rounded-3xl border-2 border-[#dddddd] min-h-[calc(100vh-8rem)]">
+                    <div className="flex flex-col items-center justify-center h-full">
+                        <h1 className="text-4xl font-bold text-red-500 mb-4">
+                            {error || 'Product not found'}
+                        </h1>
+                        <p className="text-xl text-gray-600">
+                            The product you're looking for might have been removed or is private.
+                        </p>
+                    </div>
+                </div>
             </div>
         );
     }
@@ -243,138 +257,180 @@ export default function ProductPage() {
     const IconComponent = CategoryIcons[product.category as keyof typeof CategoryIcons] || FileIcon;
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
-            <Toaster position="top-center" />
-            <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-                {/* Product Preview */}
-                <div className="aspect-video w-full bg-gray-100 flex items-center justify-center">
-                    {product.bannerUrl ? (
-                        <img 
-                            src={product.bannerUrl} 
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                        />
-                    ) : (
-                        <div className="flex flex-col items-center justify-center text-gray-400">
-                            <IconComponent className="w-24 h-24 mb-2" />
-                            <span className="text-lg">{product.category} File</span>
-                        </div>
-                    )}
-                </div>
-
-                {/* Product Info */}
-                <div className="p-6">
-                    <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
-                    
-                    {product.description && (
-                        <p className="text-gray-600 mb-6">{product.description}</p>
-                    )}
-
-                    <div className="flex items-baseline mb-6">
-                        <span className="text-2xl font-bold">${product.price}</span>
-                        <span className="text-gray-500 ml-2">({solAmount} SOL)</span>
-                    </div>
-
-                    {/* Edit Button for Creator */}
-                    {publicKey && product.creator.publicKey === publicKey.toString() && (
-                        <Link 
-                            href={`/product/${product.id}/edit`}
-                            className="fixed bottom-6 right-6 bg-emerald-500 text-white p-3 rounded-full shadow-lg hover:bg-emerald-600 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <Pencil className="h-5 w-5" />
-                            <span>Edit Product</span>
-                        </Link>
-                    )}
-
-                    {/* Stock Info */}
-                    <div className="mb-6">
-                        {product.isUnlimitedStock ? (
-                            <span className="text-emerald-600">∞ Unlimited stock</span>
+        <div className="w-[97%] mx-auto mt-10 pb-12">
+            <div className="bg-white rounded-3xl border-2 border-[#dddddd] overflow-hidden">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 p-8">
+                    {/* Product Preview */}
+                    <div className="aspect-[4/3] w-full relative rounded-2xl overflow-hidden border-[5px] border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        {product.bannerUrl ? (
+                            <img 
+                                src={product.bannerUrl} 
+                                alt={product.name}
+                                className="w-full h-full object-cover"
+                            />
                         ) : (
-                            <span className={`${product.stockQuantity === 0 ? 'text-red-600' : 'text-emerald-600'}`}>
-                                {product.stockQuantity} left in stock
-                            </span>
+                            <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#f7fa3e] to-[#dbfa51]">
+                                <IconComponent className="w-32 h-32 mb-4 text-black/80" />
+                                <span className="text-2xl font-medium text-black/80">{product.category}</span>
+                            </div>
                         )}
                     </div>
 
-                    {/* Payment Options */}
-                    <Drawer open={showPaymentDrawer} onOpenChange={setShowPaymentDrawer}>
-                        <DrawerTrigger asChild>
-                            <button
-                                className="bg-emerald-500 text-white px-8 py-3 rounded-lg hover:bg-emerald-600 transition-colors disabled:bg-gray-300 text-lg font-semibold w-full"
-                                disabled={(!product.isUnlimitedStock && product.stockQuantity === 0) || isProcessing}
-                            >
-                                Buy Now
+                    {/* Product Info */}
+                    <div className="flex flex-col">
+                        <h1 className="text-6xl font-bold mb-6">{product.name}</h1>
+                        
+                        {product.description && (
+                            <p className="text-2xl text-gray-600 mb-8">{product.description}</p>
+                        )}
+
+                        <div className="flex items-baseline mb-8">
+                            <span className="text-4xl font-bold">${product.price}</span>
+                            <span className="text-2xl text-gray-500 ml-3">({solAmount} SOL)</span>
+                        </div>
+
+                        {/* Stock Info */}
+                        <div className="mb-8">
+                            {product.isUnlimitedStock ? (
+                                <span className="bg-[#3ffd7e] text-black px-6 py-2.5 rounded-full text-lg font-medium">
+                                    ∞ Unlimited stock
+                                </span>
+                            ) : (
+                                <span className={`${
+                                    product.stockQuantity === 0 
+                                    ? 'bg-red-100 text-red-600' 
+                                    : 'bg-[#3ffd7e] text-black'
+                                } px-6 py-2.5 rounded-full text-lg font-medium`}>
+                                    {product.stockQuantity} left in stock
+                                </span>
+                            )}
+                        </div>
+
+                        {/* Payment Button */}
+                        <div className="flex gap-4">
+                            <Drawer open={showPaymentDrawer} onOpenChange={setShowPaymentDrawer}>
+                                <DrawerTrigger asChild>
+                                    <button
+                                        className={`bg-black cursor-pointer text-white px-8 py-4 rounded-lg text-xl font-bold hover:bg-fuchsia-300 hover:text-black transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed ${publicKey && product.creator.publicKey === publicKey.toString() ? 'w-[70%]' : 'w-full'}`}
+                                        disabled={(!product.isUnlimitedStock && product.stockQuantity === 0) || isProcessing}
+                                    >
+                                        {isProcessing ? 'Processing...' : 'Buy Now'}
+                                    </button>
+                                </DrawerTrigger>
+                                <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[50vh] rounded-t-[30px] border-t-0">
+                                    <div className="mx-auto w-full max-w-4xl flex items-center justify-center flex-col ">
+                                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-6 " />
+                                        <DrawerHeader className="text-center pb-8">
+                                            <DrawerTitle className="text-5xl font-bold mb-3">Choose Payment Method</DrawerTitle>
+                                        </DrawerHeader>
+                                        <div className="flex gap-6 w-full justify-center py-4 px-4">
+                                            {/* Wallet Payment */}
+                                            <div
+                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-6 w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
+                                                onClick={() => {
+                                                    setShowPaymentDrawer(false);
+                                                    handlePayment();
+                                                }}
+                                            >
+                                                <WalletMultiButton className="w-16 h-16 mb-9" />
+                                                <span className="font-bold text-3xl text-center mb-2 mt-3">Wallet</span>
+                                                <span className="text-base text-gray-600 text-center">Connect & pay directly with your wallet</span>
+                                                <div className="mt-4 bg-[#f7fa3e] px-4 py-2 rounded-full text-sm font-medium">
+                                                    Recommended
+                                                </div>
+                                            </div>
+                                            {/* QR Payment */}
+                                            <div
+                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-6 w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
+                                                onClick={() => {
+                                                    setShowPaymentDrawer(false);
+                                                    setTimeout(() => setShowQRDrawer(true), 200);
+                                                }}
+                                            >
+                                                <div className="w-16 h-16 mb-3 flex items-center justify-center">
+                                                    <QRCodeSVG value={qrCode} size={56} />
+                                                </div>
+                                                <span className="font-bold text-3xl text-center mb-2">Solana Pay</span>
+                                                <span className="text-base text-gray-600 text-center">Scan QR code with your mobile wallet</span>
+                                                <div className="mt-4 bg-fuchsia-200 px-4 py-2 rounded-full text-sm font-medium">
+                                                    Mobile friendly
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </DrawerContent>
+                            </Drawer>
+
+                            {/* Edit Button for Creator */}
+                            {publicKey && product.creator.publicKey === publicKey.toString() && (
+                                <Link 
+                                    href={`/product/${product.id}/edit`}
+                                    className="bg-black text-white px-8 py-4 rounded-lg text-xl font-bold hover:bg-fuchsia-300 hover:text-black transition-colors flex items-center gap-2 w-[30%] justify-center"
+                                >
+                                    <Pencil className="h-6 w-6" />
+                                    <span>Edit</span>
+                                </Link>
+                            )}
+                        </div>
+
+                        {/* QR Code Drawer */}
+                        <Drawer open={showQRDrawer} onOpenChange={setShowQRDrawer}>
+                            <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[50vh] rounded-t-[30px] border-t-0">
+                                <div className="mx-auto w-full max-w-2xl">
+                                    <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-4" />
+                                    <DrawerHeader className="text-center pb-2">
+                                        <DrawerTitle className="text-5xl font-bold mb-3">Scan & Pay</DrawerTitle>
+                                        <p className="text-xl text-gray-600">Use your mobile wallet (ex: phantom app) to complete the payment</p>
+                                    </DrawerHeader>
+                                    <div className="flex justify-center py-4">
+                                        <div className="bg-white border-[5px] border-black rounded-[22px] p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 transition-colors">
+                                            <QRCodeSVG value={qrCode} size={240} />
+                                        </div>
+                                    </div>
+                                </div>
+                            </DrawerContent>
+                        </Drawer>
+
+                        {/* Additional Info */}
+                        <div className="mt-12 pt-8 border-t border-gray-200 grid grid-cols-2 gap-6">
+                            <div className="flex flex-col gap-2">
+                                <span className="text-gray-500 text-lg">Category</span>
+                                <span className="text-xl font-medium">{product.category}</span>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-gray-500 text-lg">File Type</span>
+                                <span className="text-xl font-medium">{product.fileType}</span>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-gray-500 text-lg">Download Type</span>
+                                <span className="text-xl font-medium">{product.oneTimeDownload ? 'One-time' : 'Unlimited'}</span>
+                            </div>
+                            <div className="flex flex-col gap-2">
+                                <span className="text-gray-500 text-lg">Storage</span>
+                                <span className="text-xl font-medium">{product.uploadType}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Featured section / Footer */}
+            <div className="mt-12 bg-[#f7fa3e] px-10 py-8 rounded-3xl">
+                <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="space-y-4">
+                        <h2 className="text-5xl font-bold text-black">Sell Your Digital Goods</h2>
+                        <p className="text-black/80 text-xl max-w-xl">
+                            No platform fees. No middlemen. Just pure value exchange!
+                        </p>
+                        <Link href="/create">
+                            <button className="bg-black text-white px-8 py-4 rounded-[10px] font-medium text-2xl cursor-pointer hover:bg-fuchsia-300 hover:text-black transition-colors">
+                                Start Selling
                             </button>
-                        </DrawerTrigger>
-                        <DrawerContent side="bottom" aria-describedby={undefined}>
-                            <DrawerHeader>
-                                <DrawerTitle>Choose Payment Method</DrawerTitle>
-                            </DrawerHeader>
-                            <div className="flex gap-8 w-full justify-center py-4">
-                                {/* Wallet Payment */}
-                                <div
-                                    className="flex flex-col items-center justify-center bg-emerald-100 hover:bg-emerald-200 rounded-xl p-6 w-40 h-40 transition-colors shadow group cursor-pointer"
-                                    onClick={() => {
-                                        setShowPaymentDrawer(false);
-                                        handlePayment();
-                                    }}
-                                >
-                                    <WalletMultiButton className="w-12 h-12 text-emerald-500 mb-2 group-hover:scale-110 transition-transform" />
-                                    <span className="font-semibold text-lg">Pay via Wallet</span>
-                                    <span className="text-xs text-gray-500 mt-1">Phantom, Solflare, etc.</span>
-                                </div>
-                                {/* QR Payment */}
-                                <div
-                                    className="flex flex-col items-center justify-center bg-emerald-100 hover:bg-emerald-200 rounded-xl p-6 w-40 h-40 transition-colors shadow group cursor-pointer"
-                                    onClick={() => {
-                                        setShowPaymentDrawer(false);
-                                        setTimeout(() => setShowQRDrawer(true), 200);
-                                    }}
-                                >
-                                    <QRCodeSVG value={qrCode} size={48} className="mb-2 group-hover:scale-110 transition-transform" />
-                                    <span className="font-semibold text-lg">Solana Pay</span>
-                                    <span className="text-xs text-gray-500 mt-1">Scan with mobile wallet</span>
-                                </div>
-                            </div>
-                            <DrawerFooter>
-                                <DrawerClose asChild>
-                                    <button className="w-full py-2 rounded bg-gray-200">Cancel</button>
-                                </DrawerClose>
-                            </DrawerFooter>
-                        </DrawerContent>
-                    </Drawer>
-
-                    {/* QR Code Drawer */}
-                    <Drawer open={showQRDrawer} onOpenChange={setShowQRDrawer}>
-                        <DrawerContent side="bottom" aria-describedby={undefined}>
-                            <DrawerHeader>
-                                <DrawerTitle>Scan to Pay with Solana Pay</DrawerTitle>
-                            </DrawerHeader>
-                            <div className="flex justify-center py-4">
-                                <QRCodeSVG value={qrCode} size={200} />
-                            </div>
-                            <DrawerFooter>
-                                <DrawerClose asChild>
-                                    <button className="w-full py-2 rounded bg-gray-200">Close</button>
-                                </DrawerClose>
-                            </DrawerFooter>
-                        </DrawerContent>
-                    </Drawer>
-
-                    {/* Additional Info */}
-                    <div className="mt-8 pt-6 border-t grid grid-cols-2 gap-4 text-sm text-gray-600">
-                        <div>
-                            <span className="font-medium">Category:</span> {product.category}
-                        </div>
-                        <div>
-                            <span className="font-medium">File Type:</span> {product.fileType}
-                        </div>
-                        <div>
-                            <span className="font-medium">Download Type:</span> {product.oneTimeDownload ? 'One-time' : 'Unlimited'}
-                        </div>
-                        <div>
-                            <span className="font-medium">Storage:</span> {product.uploadType}
+                        </Link>
+                    </div>
+                    <div className="w-full max-w-xs">
+                        <div className="aspect-square rounded-2xl backdrop-blur-sm flex items-center justify-center">
+                            <Image src="/nect-logo.png" alt="Sell" width={500} height={500} />
                         </div>
                     </div>
                 </div>
