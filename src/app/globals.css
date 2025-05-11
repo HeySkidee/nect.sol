@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -119,4 +121,21 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom styles for wallet button */
+.wallet-adapter-button-trigger {
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  line-height: 1.25rem !important;
+  background-color: #f8acfc !important;
+  color: black !important;
+  transition: all 0.2s ease-in-out !important;
+}
+
+
+.wallet-adapter-button-trigger:hover {
+  background-color: #f991ff !important;
 }

@@ -42,7 +42,7 @@ function Navbar() {
 
                 // Check if this wallet has connected before
                 const hasConnectedBefore = localStorage.getItem(`wallet_${publicKey.toString()}_connected`);
-                
+
                 if (!hasConnectedBefore) {
                     // Mark this wallet as having connected
                     localStorage.setItem(`wallet_${publicKey.toString()}_connected`, 'true');
@@ -61,34 +61,36 @@ function Navbar() {
             localStorage.removeItem(`wallet_${publicKey.toString()}_connected`);
         }
     }, [connected, publicKey]);
-    
+
     return (
-        <nav className="sticky top-0 z-50 bg-white shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex justify-between h-16 items-center">
-                    <Link href="/" className="text-2xl font-bold text-emerald-800">
-                        Nect
+        <nav className="sticky top-6 z-50 py-2 pb-2.5 bg-white w-[97%] mx-auto mb-12 rounded-2xl border-[#dddddd] border-2 ">
+            <div className="px-4 flex justify-between items-center">
+                <Link href="/" className="text-2xl font-bold">
+                    NECT
+                </Link>
+
+                <div className="flex items-center gap-6 font-medium">
+                    <Link href="/create" className="text-lg hover:text-blue-500 transition-colors">
+                        START SELLING
                     </Link>
-                    
-                    <div className="flex items-center gap-6">
-                        <Link 
-                            href="/marketplace" 
-                            className="px-4 py-2 text-gray-700 hover:text-emerald-800 font-medium transition-colors"
+                    <Link href="/marketplace" className="text-lg hover:text-blue-500 transition-colors">
+                        MARKETPLACE
+                    </Link>
+                    <Link href="https://youtube.com" className="text-lg hover:text-blue-500 transition-colors">
+                        WATCH DEMO
+                    </Link>
+                </div>
+
+                <div className="flex items-center gap-6">
+                    {connected && (
+                        <Link
+                            href="/dashboard"
+                            className="text-lg font-medium hover:text-blue-500 transition-colors"
                         >
-                            Marketplace
+                            Dashboard
                         </Link>
-                        
-                        {connected && (
-                            <Link 
-                                href="/dashboard" 
-                                className="px-4 py-2 text-gray-700 hover:text-emerald-800 font-medium transition-colors"
-                            >
-                                Dashboard
-                            </Link>
-                        )}
-                        
-                        <WalletMultiButtonDynamic className="!bg-emerald-500 hover:!bg-emerald-600 !rounded-lg" />
-                    </div>
+                    )}
+                    <WalletMultiButtonDynamic />
                 </div>
             </div>
         </nav>
