@@ -36,4 +36,23 @@ export interface AnalyticsData {
     total: number;
     pending: number;
   };
+}
+
+export type UploadType = 'CENTRALIZED' | 'DECENTRALIZED';
+export type Visibility = 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
+export type FileCategory = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT' | 'SOFTWARE' | 'ARCHIVE' | 'OTHER';
+
+export interface CreateProductFormData {
+  name: string;
+  description: string;
+  price: string;
+  isUnlimitedStock: boolean;
+  stockQuantity: number | null;
+  fileType: string;
+  category: FileCategory;
+  visibility: Visibility;
+  oneTimeDownload: boolean;
+  uploadType: UploadType;
+  fileUrl: string;
+  bannerUrl: string;
 } 
