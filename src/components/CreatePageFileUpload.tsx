@@ -15,9 +15,10 @@ interface CreatePageFileUploadProps {
   uploadType?: UploadType;
   onBeginUpload?: () => void;
   onUploadError?: (error: Error) => void;
+  onClientUploadComplete?: () => void;
 }
 
-function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRALIZED', onBeginUpload, onUploadError }: CreatePageFileUploadProps) {
+function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRALIZED', onBeginUpload, onUploadError, onClientUploadComplete }: CreatePageFileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFileName, setCurrentFileName] = useState<string>("");
@@ -143,6 +144,7 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
               const fileName = res[0].name;
               const fileType = fileName.split('.').pop() || '';
               onChange(res[0].ufsUrl, fileType, fileName);
+              onClientUploadComplete?.();
             }
           }}
           onUploadError={(error: Error) => {

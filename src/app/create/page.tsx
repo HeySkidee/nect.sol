@@ -57,6 +57,7 @@ export default function Create() {
   const [dragActive, setDragActive] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFileSelected, setIsFileSelected] = useState(false);
+  const [isBannerUploading, setIsBannerUploading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -94,7 +95,12 @@ export default function Create() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.fileUrl) {
-      alert('Please upload a file first');
+      toast.error('Please upload a file first');
+      return;
+    }
+
+    if (isBannerUploading) {
+      toast.error('Please wait for banner image to finish uploading');
       return;
     }
 
@@ -117,7 +123,7 @@ export default function Create() {
       router.push(`/product/${product.id}`);
     } catch (error) {
       console.error('Error creating product:', error);
-      alert('Failed to create product. Please try again.');
+      toast.error('Failed to create product. Please try again.');
       setIsSubmitting(false);
     }
   };
@@ -261,14 +267,56 @@ export default function Create() {
                         Banner Image (optional)
                         <span className="text-gray-500 text-base ml-2">Recommended size: 1200x630px</span>
                       </label>
-                      <ImageUpload
-                        endpoint="imageUploader"
+                      <CreatePageFileUpload
+                        endpoint="mediaUploader"
                         value={formData.bannerUrl}
-                        onChange={(url: string) => {
+                        category="IMAGE"
+                        onChange={(url) => {
+                          if (!url) {
+                            setFormData(prev => ({
+                              ...prev,
+                              bannerUrl: ''
+                            }));
+                            return;
+                          }
                           setFormData(prev => ({
                             ...prev,
                             bannerUrl: url
                           }));
+                        }}
+                        onBeginUpload={() => {
+                          setIsBannerUploading(true);
+                        }}
+                        onUploadError={(error) => {
+                          setIsBannerUploading(false);
+                          if (error.message.includes('100MB')) {
+                            toast.error(error.message, {
+                              duration: 4000,
+                              position: 'top-center',
+                              style: {
+                                background: '#fee2e2',
+                                color: '#991b1b',
+                                fontSize: '1.25rem',
+                                padding: '24px 32px',
+                                fontWeight: '600',
+                                minWidth: '400px',
+                                textAlign: 'center',
+                                borderRadius: '12px',
+                                border: '2px solid #dc2626'
+                              },
+                              icon: '⚠️'
+                            });
+                          } else {
+                            toast.error("Failed to upload file. Please try again.", {
+                              style: {
+                                fontSize: '1.125rem',
+                                padding: '16px',
+                              }
+                            });
+                          }
+                        }}
+                        onClientUploadComplete={() => {
+                          setIsBannerUploading(false);
                         }}
                       />
                     </div>

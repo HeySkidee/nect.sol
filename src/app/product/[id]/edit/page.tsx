@@ -4,20 +4,20 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
+import {
+  FileIcon,
+  ImageIcon,
+  VideoIcon,
+  AudioWaveformIcon,
+  ArchiveIcon,
+  CodeIcon,
+  FileTextIcon,
+  Loader2,
+  Pencil
+} from 'lucide-react';
 import toast from 'react-hot-toast';
-import FileUpload from '@/components/FileUpload';
-
-type FileCategory = 'IMAGE' | 'VIDEO' | 'AUDIO' | 'DOCUMENT' | 'SOFTWARE' | 'ARCHIVE' | 'OTHER';
-type Visibility = 'PUBLIC' | 'PRIVATE' | 'UNLISTED';
-type UploadType = 'CENTRALIZED' | 'DECENTRALIZED';
-
-// FileUpload component props type
-interface FileUploadProps {
-  endpoint: string;
-  value: string;
-  category: FileCategory;
-  onChange: (url: string, fileType?: string) => void;
-}
+import CreatePageFileUpload from '@/components/CreatePageFileUpload';
+import type { FileCategory, Visibility, UploadType } from '@/types';
 
 // Helper function to detect file category
 const detectFileCategory = (fileType: string): FileCategory => {
@@ -65,6 +65,8 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(true);
   const [product, setProduct] = useState<Product | null>(null);
   const [solPrice, setSolPrice] = useState<number | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isBannerUploading, setIsBannerUploading] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -97,7 +99,7 @@ export default function EditProductPage() {
         }
         const data = await response.json();
         setProduct(data);
-        
+
         // Initialize form data with product data
         setFormData({
           name: data.name,
@@ -141,6 +143,13 @@ export default function EditProductPage() {
       return;
     }
 
+    if (isBannerUploading) {
+      toast.error('Please wait for banner image to finish uploading');
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const response = await fetch(`/api/product/${id}`, {
         method: 'PUT',
@@ -150,7 +159,9 @@ export default function EditProductPage() {
         body: JSON.stringify({
           ...formData,
           price: parseFloat(formData.price),
-          stockQuantity: formData.isUnlimitedStock ? null : formData.stockQuantity
+          stockQuantity: formData.isUnlimitedStock ? null : formData.stockQuantity,
+          fileUrl: formData.fileUrl,
+          fileType: formData.fileType
         }),
       });
 
@@ -164,7 +175,55 @@ export default function EditProductPage() {
     } catch (error) {
       console.error('Error updating product:', error);
       toast.error('Failed to update product');
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  const handleCancel = () => {
+    if (window.confirm('Are you sure you want to cancel? All your changes will be lost.')) {
+      router.back();
+    }
+  };
+
+  const resetFileUpload = () => {
+    setFormData(prev => ({
+      ...prev,
+      fileUrl: '',
+      fileType: '',
+      category: 'OTHER'
+    }));
+  };
+
+  const resetBannerUpload = () => {
+    setFormData(prev => ({
+      ...prev,
+      bannerUrl: ''
+    }));
+  };
+
+  const handleFileUpload = (url: string, fileType?: string, fileName?: string) => {
+    if (!url) {
+      resetFileUpload();
+      return;
+    }
+
+    // Extract file extension from fileName or URL if fileType is not provided
+    let detectedFileType = fileType;
+    if (!detectedFileType && fileName) {
+      detectedFileType = fileName.split('.').pop() || '';
+    } else if (!detectedFileType) {
+      detectedFileType = url.split('.').pop()?.split('?')[0] || '';
+    }
+
+    const category = detectFileCategory(detectedFileType);
+    
+    setFormData(prev => ({
+      ...prev,
+      fileUrl: url,
+      fileType: detectedFileType,
+      category
+    }));
   };
 
   if (!connected) {
@@ -185,241 +244,316 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-8">Edit Product</h1>
+    <div className="w-[97%] mx-auto my-6">
+      <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#dddddd]">
+        <div className="flex flex-col gap-6">
+          {/* Header */}
+          <div className="bg-[#EE2B69] rounded-3xl p-14 text-center text-white">
+            <h1 className="text-5xl font-black tracking-tight mb-4">
+              Update Your Product Details
+            </h1>
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
-        {/* Product Name */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Product Name *</label>
-          <input
-            type="text"
-            required
-            className="w-full p-2 border rounded-lg"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-          />
-        </div>
+          {/* Form */}
+          <div className="max-w-4xl mx-auto w-full">
+            <div className="bg-white border-[5px] border-black rounded-[22px] p-8">
+              <form onSubmit={handleSubmit} className="space-y-6">
+                {/* Product Name */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">Product Name *</label>
+                  <input
+                    type="text"
+                    required
+                    className="w-full p-4 border-2 border-black rounded-2xl text-lg focus:outline-none focus:border-[#EE2B69]"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  />
+                </div>
 
-        {/* Description */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Description (optional)</label>
-          <textarea
-            className="w-full p-2 border rounded-lg min-h-[200px]"
-            value={formData.description}
-            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-          />
-        </div>
+                {/* Description */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">Description (optional)</label>
+                  <textarea
+                    className="w-full p-4 border-2 border-black rounded-2xl text-lg min-h-[200px] focus:outline-none focus:border-[#EE2B69]"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                  />
+                </div>
 
-        {/* Banner Image Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">
-            Banner Image (optional)
-            <span className="text-gray-500 text-xs ml-2">Recommended size: 1200x630px</span>
-          </label>
-          <FileUpload
-            endpoint="mediaUploader"
-            value={formData.bannerUrl}
-            category="IMAGE"
-            onChange={(url) => {
-              setFormData(prev => ({
-                ...prev,
-                bannerUrl: url
-              }));
-            }}
-          />
-        </div>
+                {/* Banner Image Upload */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">
+                    Banner Image (optional)
+                    <span className="text-gray-500 text-base ml-2">Recommended size: 1200x630px</span>
+                  </label>
+                  <CreatePageFileUpload
+                    endpoint="mediaUploader"
+                    value={formData.bannerUrl}
+                    category="IMAGE"
+                    onChange={(url) => {
+                      if (!url) {
+                        resetBannerUpload();
+                        return;
+                      }
+                      setFormData(prev => ({
+                        ...prev,
+                        bannerUrl: url
+                      }));
+                    }}
+                    onBeginUpload={() => {
+                      setIsBannerUploading(true);
+                    }}
+                    onUploadError={(error) => {
+                      setIsBannerUploading(false);
+                      if (error.message.includes('100MB')) {
+                        toast.error(error.message, {
+                          duration: 4000,
+                          position: 'top-center',
+                          style: {
+                            background: '#fee2e2',
+                            color: '#991b1b',
+                            fontSize: '1.25rem',
+                            padding: '24px 32px',
+                            fontWeight: '600',
+                            minWidth: '400px',
+                            textAlign: 'center',
+                            borderRadius: '12px',
+                            border: '2px solid #dc2626'
+                          },
+                          icon: '⚠️'
+                        });
+                      } else {
+                        toast.error("Failed to upload file. Please try again.", {
+                          style: {
+                            fontSize: '1.125rem',
+                            padding: '16px',
+                          }
+                        });
+                      }
+                    }}
+                    onClientUploadComplete={() => {
+                      setIsBannerUploading(false);
+                    }}
+                  />
+                </div>
 
-        {/* File Upload */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Product File *</label>
-          <FileUpload
-            endpoint="mediaUploader"
-            value={formData.fileUrl}
-            category={formData.category}
-            onChange={(url, fileType) => {
-              const category = detectFileCategory(fileType);
-              setFormData(prev => ({
-                ...prev,
-                fileUrl: url,
-                fileType,
-                category
-              }));
-            }}
-          />
-          {formData.fileUrl && (
-            <p className="text-sm text-green-600 mt-2">
-              Current file: {formData.fileType} file
-            </p>
-          )}
-        </div>
+                {/* File Upload */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">Product File *</label>
+                  <CreatePageFileUpload
+                    endpoint="mediaUploader"
+                    value={formData.fileUrl}
+                    category={formData.category}
+                    onChange={handleFileUpload}
+                    onUploadError={(error) => {
+                      if (error.message.includes('100MB')) {
+                        toast.error(error.message, {
+                          duration: 4000,
+                          position: 'top-center',
+                          style: {
+                            background: '#fee2e2',
+                            color: '#991b1b',
+                            fontSize: '1.25rem',
+                            padding: '24px 32px',
+                            fontWeight: '600',
+                            minWidth: '400px',
+                            textAlign: 'center',
+                            borderRadius: '12px',
+                            border: '2px solid #dc2626'
+                          },
+                          icon: '⚠️'
+                        });
+                      } else {
+                        toast.error("Failed to upload file. Please try again.", {
+                          style: {
+                            fontSize: '1.125rem',
+                            padding: '16px',
+                          }
+                        });
+                      }
+                    }}
+                  />
+                  {formData.fileUrl && (
+                    <p className="text-sm text-green-600 mt-2">
+                      Current file: {formData.fileType} file
+                    </p>
+                  )}
+                </div>
 
-        {/* Price */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Price (USD) *</label>
-          <input
-            type="number"
-            required
-            step="0.01"
-            min="0"
-            className="w-full p-2 border rounded-lg"
-            value={formData.price}
-            onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-            placeholder="Enter price in USD"
-          />
-          {solPrice && formData.price && (
-            <div className="mt-2 text-sm text-gray-600">
-              ≈ {(Number(formData.price) / solPrice).toFixed(4)} SOL
-            </div>
-          )}
-        </div>
+                {/* Price */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">Price (USD) *</label>
+                  <input
+                    type="number"
+                    required
+                    step="0.01"
+                    min="0"
+                    className="w-full p-4 border-2 border-black rounded-2xl text-lg focus:outline-none focus:border-[#EE2B69]"
+                    value={formData.price}
+                    onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                    placeholder="Enter price in USD"
+                  />
+                  {solPrice && formData.price && (
+                    <div className="mt-2 text-lg text-gray-600">
+                      ≈ {(Number(formData.price) / solPrice).toFixed(4)} SOL
+                    </div>
+                  )}
+                </div>
 
-        {/* Stock Management */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Stock</label>
-          <div className="flex items-center gap-6">
-            <label className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={formData.isUnlimitedStock}
-                onChange={() => setFormData({
-                  ...formData,
-                  isUnlimitedStock: true,
-                  stockQuantity: null
-                })}
-                className="rounded"
-              />
-              <span>Unlimited</span>
-            </label>
+                {/* Stock Management */}
+                <div>
+                  <label className="block text-xl font-bold mb-2">Stock</label>
+                  <div className="flex items-center gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={formData.isUnlimitedStock}
+                        onChange={() => setFormData({
+                          ...formData,
+                          isUnlimitedStock: true,
+                          stockQuantity: null
+                        })}
+                        className="rounded-lg border-2 border-black w-6 h-6 cursor-pointer"
+                      />
+                      <span className="text-lg">Unlimited</span>
+                    </label>
 
-            <div className="flex items-center gap-2">
-              <label className="flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={!formData.isUnlimitedStock}
-                  onChange={() => setFormData({
-                    ...formData,
-                    isUnlimitedStock: false,
-                    stockQuantity: formData.stockQuantity || 1
-                  })}
-                  className="rounded"
-                />
-                <span>Limited</span>
-              </label>
+                    <div className="flex items-center gap-2">
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={!formData.isUnlimitedStock}
+                          onChange={() => setFormData({
+                            ...formData,
+                            isUnlimitedStock: false,
+                            stockQuantity: formData.stockQuantity || 1
+                          })}
+                          className="rounded-lg border-2 border-black w-6 h-6 cursor-pointer"
+                        />
+                        <span className="text-lg">Limited</span>
+                      </label>
 
-              <input
-                type="number"
-                min="1"
-                className={`w-24 p-2 border rounded-lg ml-2 ${formData.isUnlimitedStock ? 'bg-gray-100 cursor-not-allowed opacity-50' : ''}`}
-                value={formData.isUnlimitedStock ? '' : (formData.stockQuantity ?? '')}
-                onChange={(e) => setFormData({
-                  ...formData,
-                  stockQuantity: e.target.value ? parseInt(e.target.value) : null
-                })}
-                disabled={formData.isUnlimitedStock}
-                placeholder="Quantity"
-              />
+                      <input
+                        type="number"
+                        min="1"
+                        className={`w-32 p-4 border-2 border-black rounded-2xl text-lg ml-2 focus:outline-none focus:border-[#EE2B69] ${formData.isUnlimitedStock ? 'bg-gray-100 cursor-not-allowed opacity-50' : 'cursor-text'
+                          }`}
+                        value={formData.isUnlimitedStock ? '' : (formData.stockQuantity ?? '')}
+                        onChange={(e) => setFormData({
+                          ...formData,
+                          stockQuantity: e.target.value ? parseInt(e.target.value) : null
+                        })}
+                        disabled={formData.isUnlimitedStock}
+                        placeholder="Quantity"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Visibility */}
+                <div>
+                  <label className="block text-xl font-bold mb-4">Visibility</label>
+                  <div className="space-y-4">
+                    {[
+                      {
+                        id: 'public',
+                        value: 'PUBLIC',
+                        title: 'Public',
+                        description: 'Your product will be visible to everyone and listed in the Marketplace'
+                      },
+                      {
+                        id: 'unlisted',
+                        value: 'UNLISTED',
+                        title: 'Unlisted',
+                        description: 'Your product won\'t appear in the marketplace but can be accessed by anyone with the link'
+                      },
+                      {
+                        id: 'private',
+                        value: 'PRIVATE',
+                        title: 'Private',
+                        description: 'Your product won\'t be visible and the link won\'t work'
+                      }
+                    ].map(option => (
+                      <div key={option.id} className="flex items-center gap-3 p-4 border-2 border-black rounded-2xl hover:border-[#EE2B69] transition-colors cursor-pointer">
+                        <input
+                          type="radio"
+                          id={option.id}
+                          name="visibility"
+                          value={option.value}
+                          checked={formData.visibility === option.value}
+                          onChange={(e) => setFormData({ ...formData, visibility: e.target.value as Visibility })}
+                          className="w-6 h-6 cursor-pointer"
+                        />
+                        <label htmlFor={option.id} className="flex flex-col cursor-pointer w-full">
+                          <span className="text-lg font-bold">{option.title}</span>
+                          <span className="text-gray-600">{option.description}</span>
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Upload Type */}
+                <div>
+                  <label className="block text-xl font-bold mb-4">Upload Type</label>
+                  <div className="flex gap-6">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="uploadType"
+                        value="CENTRALIZED"
+                        checked={formData.uploadType === 'CENTRALIZED'}
+                        onChange={(e) => setFormData({ ...formData, uploadType: e.target.value as UploadType })}
+                        className="w-6 h-6 cursor-pointer"
+                      />
+                      <span className="text-lg">Centralized upload (faster)</span>
+                    </label>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="uploadType"
+                        value="DECENTRALIZED"
+                        checked={formData.uploadType === 'DECENTRALIZED'}
+                        onChange={(e) => setFormData({ ...formData, uploadType: e.target.value as UploadType })}
+                        className="w-6 h-6 cursor-pointer"
+                      />
+                      <span className="text-lg">Decentralized upload (slower)</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Buttons */}
+                <div className="flex gap-4">
+                  <button
+                    type="button"
+                    onClick={handleCancel}
+                    className="flex-1 bg-gray-100 text-gray-700 text-xl font-bold py-4 px-8 rounded-2xl hover:bg-gray-200 transition-colors cursor-pointer"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="flex-1 bg-[#EE2B69] text-white text-xl font-bold py-4 px-8 rounded-2xl hover:bg-[#EE2B69]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="h-5 w-5 animate-spin" />
+                        Saving...
+                      </>
+                    ) : (
+                      <>
+                        <Pencil className="h-5 w-5" />
+                        Save Changes
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>
-
-        {/* Visibility */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Visibility</label>
-          <div className="space-y-3">
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="public"
-                name="visibility"
-                value="PUBLIC"
-                checked={formData.visibility === 'PUBLIC'}
-                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as Visibility })}
-                className="w-4 h-4"
-              />
-              <label htmlFor="public" className="flex flex-col">
-                <span className="font-medium">Public</span>
-                <span className="text-sm text-gray-500">Your product will be visible to everyone and listed in the Marketplace</span>
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="unlisted"
-                name="visibility"
-                value="UNLISTED"
-                checked={formData.visibility === 'UNLISTED'}
-                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as Visibility })}
-                className="w-4 h-4"
-              />
-              <label htmlFor="unlisted" className="flex flex-col">
-                <span className="font-medium">Unlisted</span>
-                <span className="text-sm text-gray-500">Your product won't appear in the marketplace but can be accessed by anyone with the link</span>
-              </label>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <input
-                type="radio"
-                id="private"
-                name="visibility"
-                value="PRIVATE"
-                checked={formData.visibility === 'PRIVATE'}
-                onChange={(e) => setFormData({ ...formData, visibility: e.target.value as Visibility })}
-                className="w-4 h-4"
-              />
-              <label htmlFor="private" className="flex flex-col">
-                <span className="font-medium">Private</span>
-                <span className="text-sm text-gray-500">Your product won't be visible and the link won't work</span>
-              </label>
-            </div>
-          </div>
-        </div>
-
-        {/* Upload Type */}
-        <div className="space-y-2">
-          <label className="block text-sm font-medium">Upload Type</label>
-          <div className="flex gap-4">
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="uploadType"
-                value="CENTRALIZED"
-                checked={formData.uploadType === 'CENTRALIZED'}
-                onChange={(e) => setFormData({ ...formData, uploadType: e.target.value as UploadType })}
-              />
-              Centralized upload (faster)
-            </label>
-            <label className="flex items-center gap-2">
-              <input
-                type="radio"
-                name="uploadType"
-                value="DECENTRALIZED"
-                checked={formData.uploadType === 'DECENTRALIZED'}
-                onChange={(e) => setFormData({ ...formData, uploadType: e.target.value as UploadType })}
-              />
-              Decentralized upload (slower)
-            </label>
-          </div>
-        </div>
-
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="flex-1 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Save Changes
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 } 

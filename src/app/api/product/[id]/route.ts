@@ -97,6 +97,9 @@ export async function PUT(
                 stockQuantity: data.isUnlimitedStock ? null : parseInt(data.stockQuantity),
                 oneTimeDownload: data.oneTimeDownload,
                 bannerUrl: data.bannerUrl || null,
+                fileUrl: data.fileUrl,
+                fileType: data.fileType,
+                uploadType: data.uploadType
             },
             include: {
                 creator: true
