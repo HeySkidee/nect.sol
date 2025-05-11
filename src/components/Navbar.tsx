@@ -66,18 +66,25 @@ function Navbar() {
     return (
         <nav className="sticky top-6 z-50 py-2 pb-2.5 bg-white w-[97%] mx-auto mb-12 rounded-2xl border-[#dddddd] border-2 ">
             <div className="px-4 flex justify-between items-center">
-                <Link href="/" className="text-2xl font-bold flex items-center gap-2">
-                    <Image src="/nect-logo.png" alt="NECT" width={35} height={35} /> NECT
+                <Link href="/" className="text-2xl font-bold flex items-center gap-2 group">
+                    <Image
+                        src="/nect-logo.png"
+                        alt="NECT"
+                        width={35}
+                        height={35}
+                        className="transform transition-transform duration-300 group-hover:scale-110"
+                    />
+                    <span className="text-2xl font-bold">NECT</span>
                 </Link>
 
-                <div className="flex items-center gap-6 font-medium">
-                    <Link href="/create" className="text-lg hover:text-blue-500 transition-colors">
+                <div className=" flex justify-center items-center  font-medium">
+                    <Link href="/create" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black">
                         START SELLING
                     </Link>
-                    <Link href="/marketplace" className="text-lg hover:text-blue-500 transition-colors">
+                    <Link href="/marketplace" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black">   
                         MARKETPLACE
                     </Link>
-                    <Link href="https://youtube.com" className="text-lg hover:text-blue-500 transition-colors">
+                    <Link href="https://youtube.com" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black ">
                         WATCH DEMO
                     </Link>
                 </div>

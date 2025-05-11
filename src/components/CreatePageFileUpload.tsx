@@ -19,6 +19,13 @@ interface CreatePageFileUploadProps {
 }
 
 function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRALIZED', onBeginUpload, onUploadError, onClientUploadComplete }: CreatePageFileUploadProps) {
+  // TODO: Implement decentralized file upload using IPFS/Arweave
+  // - Add IPFS/Arweave SDK integration
+  // - Implement file encryption before upload
+  // - Store file metadata on-chain
+  // - Add progress tracking for decentralized uploads
+  // - Handle upload failures and retries
+  // - Implement file verification after upload
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFileName, setCurrentFileName] = useState<string>("");

@@ -18,6 +18,14 @@ interface PaymentModalProps {
 }
 
 export default function PaymentModal({ isOpen, onClose, productId, price, creatorPublicKey, onSuccess }: PaymentModalProps) {
+    // TODO: Implement dynamic Solana Pay QR code generation
+    // - Generate unique reference for each transaction
+    // - Create dynamic QR code with unique payment link
+    // - Implement real-time payment status tracking
+    // - Handle payment confirmation and download token generation
+    // - Add timeout and QR code refresh functionality
+    // - Implement webhook for payment notifications
+    // - Add fallback payment methods
     const { publicKey, sendTransaction } = useWallet();
     const [solPrice, setSolPrice] = useState<number | null>(null);
     const [paymentMethod, setPaymentMethod] = useState<'wallet' | 'qr'>('wallet');

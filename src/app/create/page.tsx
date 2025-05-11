@@ -493,6 +493,31 @@ export default function Create() {
                       </div>
                     </div>
 
+                    {/* Token Gating (Disabled) */}
+                    <div>
+                      <label className="block text-xl font-bold mb-4">Token Gating</label>
+                      <div className="space-y-4 cursor-not-allowed">
+                        <div className="relative">
+                          <div className="absolute inset-0 bg-gray-100/80 backdrop-blur-[1px] z-10 rounded-xl flex items-center justify-center">
+                            <span className="bg-gray-200 text-gray-600 px-4 py-2 rounded-full text-lg font-medium">Coming Soon</span>
+                          </div>
+                          <div className="border-2 border-gray-200 rounded-xl p-4">
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="checkbox"
+                                disabled
+                                className="w-6 h-6 mt-1 cursor-not-allowed"
+                              />
+                              <div>
+                                <h3 className="text-lg font-bold text-gray-400">Enable Token Gating</h3>
+                                <p className="text-gray-500">Restrict access to holders of specific NFTs or tokens</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Visibility */}
                     <div>
                       <label className="block text-xl font-bold mb-4">Visibility</label>
