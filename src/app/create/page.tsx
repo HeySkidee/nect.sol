@@ -3,29 +3,27 @@
 import { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
-import FileUpload from '@/components/FileUpload'; 
 import { useRouter } from 'next/navigation';
 import { 
-  FileIcon, 
-  ImageIcon, 
-  VideoIcon, 
-  AudioWaveformIcon, 
-  ArchiveIcon, 
-  CodeIcon, 
+  FileIcon,
+  ImageIcon,
+  VideoIcon,
+  AudioWaveformIcon,
+  ArchiveIcon,
+  CodeIcon,
   FileTextIcon,
-  Upload,
-  Loader2,
-  Zap,
-  Shield,
+  Zap, 
+  Shield, 
   Wallet,
-  Youtube,
-  Twitter,
-  Github,
-  Linkedin
+  Loader2,
 } from 'lucide-react';
 import type { CreateProductFormData, FileCategory, UploadType, Visibility } from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import CreatePageFileUpload from '@/components/CreatePageFileUpload';
+import FileUpload from '@/components/FileUpload';
+import ImageUpload from '@/components/ImageUpload';
+import { toast } from 'react-hot-toast';
 
 const CategoryIcons = {
   IMAGE: ImageIcon,
@@ -180,54 +178,53 @@ export default function Create() {
                   </div>
                 )}
 
-                <div className={`min-h-[300px] bg-white border-[5px] border-black rounded-[30px] p-8 flex flex-col items-center justify-center transition-all ${
-                  dragActive ? 'bg-[#EE2B69]/10' : 'hover:bg-gray-50'
-                }`}>
-                  {!formData.fileUrl && !isFileSelected && (
-                    <>
-                      <div className="size-24 rounded-full bg-[#EE2B69] flex items-center justify-center mb-6">
-                        <Upload className="size-12 text-white" />
-                      </div>
-                      <h3 className="text-3xl font-bold text-black mb-2">
-                        Drop your files here
-                      </h3>
-                      <p className="text-xl text-gray-600 mb-6">
-                        or click to browse from your computer
-                      </p>
-                      <div className="flex gap-3 flex-wrap justify-center mb-8">
-                        <FileType icon={ImageIcon} text="Images" />
-                        <FileType icon={VideoIcon} text="Videos" />
-                        <FileType icon={AudioWaveformIcon} text="Audio" />
-                        <FileType icon={CodeIcon} text="Software" />
-                        <FileType icon={FileTextIcon} text="Documents" />
-                        <FileType icon={ArchiveIcon} text="Archives" />
-                      </div>
-                    </>
-                  )}
-
-                  {/* Actual File Upload Component */}
-                  <div className="w-full max-w-xl">
-                    <FileUpload
-                      endpoint="mediaUploader"
-                      value={formData.fileUrl}
-                      category={formData.category}
-                      uploadType={formData.uploadType}
-                      onChange={(url: string, fileType: string) => {
-                        const category = detectFileCategory(fileType);
-                        setFormData(prev => ({
-                          ...prev,
-                          fileUrl: url,
-                          fileType,
-                          category
-                        }));
-                        setIsFileSelected(!!url);
-                      }}
-                      onBeginUpload={() => {
-                        setIsFileSelected(true);
-                      }}
-                    />
-                  </div>
-                </div>
+                <CreatePageFileUpload
+                  endpoint="mediaUploader"
+                  value={formData.fileUrl}
+                  category={formData.category}
+                  uploadType={formData.uploadType}
+                  onChange={(url: string, fileType: string) => {
+                    const category = detectFileCategory(fileType);
+                    setFormData(prev => ({
+                      ...prev,
+                      fileUrl: url,
+                      fileType,
+                      category
+                    }));
+                    setIsFileSelected(!!url);
+                  }}
+                  onBeginUpload={() => {
+                    setIsFileSelected(true);
+                  }}
+                  onUploadError={(error) => {
+                    if (error.message.includes('100MB')) {
+                      toast.error(error.message, {
+                        duration: 4000,
+                        position: 'top-center',
+                        style: {
+                          background: '#fee2e2',
+                          color: '#991b1b',
+                          fontSize: '1.25rem',
+                          padding: '24px 32px',
+                          fontWeight: '600',
+                          minWidth: '400px',
+                          textAlign: 'center',
+                          borderRadius: '12px',
+                          border: '2px solid #dc2626'
+                        },
+                        icon: '⚠️'
+                      });
+                    } else {
+                      toast.error("Failed to upload file. Please try again.", {
+                        style: {
+                          fontSize: '1.125rem',
+                          padding: '16px',
+                        }
+                      });
+                    }
+                    setIsFileSelected(false);
+                  }}
+                />
               </div>
             </div>
 
@@ -264,10 +261,9 @@ export default function Create() {
                         Banner Image (optional)
                         <span className="text-gray-500 text-base ml-2">Recommended size: 1200x630px</span>
                       </label>
-                      <FileUpload
-                        endpoint="mediaUploader"
+                      <ImageUpload
+                        endpoint="imageUploader"
                         value={formData.bannerUrl}
-                        category="IMAGE"
                         onChange={(url: string) => {
                           setFormData(prev => ({
                             ...prev,
@@ -426,48 +422,59 @@ export default function Create() {
               </div>
             )}
 
-            {/* Feature Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <FeatureCard 
-                title="Instant Delivery"
-                description="Buyers get immediate access to files after payment"
-                icon={<Zap className="size-8 text-white" />}
-              />
-              <FeatureCard 
-                title="Secure Payments"
-                description="Safe transactions via Solana blockchain"
-                icon={<Shield className="size-8 text-white" />}
-              />
-              <FeatureCard 
-                title="Zero Platform Fees"
-                description="Keep 100% of what you earn"
-                icon={<Wallet className="size-8 text-white" />}
-              />
-            </div>
-
-            {/* CTA Section */}
-            <div className="bg-[#f7fa3e] px-10 py-8 rounded-3xl">
-              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="space-y-4">
-                  <h2 className="text-5xl font-bold text-black">Start Shopping Now</h2>
-                  <p className="text-black/80 text-xl max-w-2xl">
-                    Experience the future of digital commerce on Solana
-                    <br />
-                    secure, decentralized, and fee-free transactions for creators and buyers.
-                  </p>
-                  <Link href="/marketplace">
-                    <button className="bg-black text-white px-8 py-4 rounded-[10px] font-medium text-2xl cursor-pointer hover:bg-fuchsia-300 hover:text-black transition-colors">
-                      Go to Marketplace
-                    </button>
-                  </Link>
+            {/* Feature Cards and CTA Section - Only show when no file is selected */}
+            {!isFileSelected && (
+              <>
+                {/* Feature Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <FeatureCard 
+                    title="Instant Delivery"
+                    description="Buyers get immediate access to files after payment"
+                    icon={<Zap className="size-8 text-white" />}
+                  />
+                  <FeatureCard 
+                    title="Secure Payments"
+                    description="Safe transactions via Solana blockchain"
+                    icon={<Shield className="size-8 text-white" />}
+                  />
+                  <FeatureCard 
+                    title="Zero Platform Fees"
+                    description="Keep 100% of what you earn"
+                    icon={<Wallet className="size-8 text-white" />}
+                  />
                 </div>
-                <div className="w-full max-w-xs">
-                  <div className="aspect-square rounded-2xl backdrop-blur-sm flex items-center justify-center">
-                    <Image src="/nect-logo.png" alt="NECT" width={500} height={500} />
+
+                {/* CTA Section */}
+                <div className="bg-[#f7fa3e] px-10 py-8 rounded-3xl">
+                  <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                    <div className="space-y-4">
+                      <h2 className="text-5xl font-bold text-black">Start Shopping Now</h2>
+                      <p className="text-black/80 text-xl max-w-2xl">
+                        Experience the future of digital commerce on Solana
+                        <br />
+                        secure, decentralized, and fee-free transactions for creators and buyers.
+                      </p>
+                      <Link href="/marketplace">
+                        <button className="bg-black text-white px-8 py-4 rounded-[10px] font-medium text-2xl cursor-pointer hover:bg-fuchsia-300 hover:text-black transition-colors">
+                          Go to Marketplace
+                        </button>
+                      </Link>
+                    </div>
+                    <div className="w-full max-w-xs">
+                      <div className="aspect-square rounded-2xl backdrop-blur-sm flex items-center justify-center">
+                        <Image 
+                          src="/nect-logo.png" 
+                          alt="NECT" 
+                          width={500} 
+                          height={500}
+                          className="w-full h-auto" 
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
+              </>
+            )}
           </div>
         </div>
       </div>

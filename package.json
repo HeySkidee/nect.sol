@@ -31,7 +31,9 @@
     "qrcode.react": "^4.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-dropzone": "^14.3.8",
     "react-hot-toast": "^2.5.2",
+    "sonner": "^2.0.3",
     "tailwind-merge": "^3.2.0",
     "uploadthing": "^7.7.2",
     "vaul": "^1.1.2"
