@@ -1,0 +1,76 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  publicKey String    @unique
+  createdAt DateTime  @default(now())
+  products  Product[]
+}
+
+model Product {
+  id               String          @id @default(uuid())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  name             String
+  description      String?
+  price            Float
+  fileUrl          String
+  fileType         String
+  isUnlimitedStock Boolean         @default(true)
+  stockQuantity    Int?
+  category         ProductCategory
+  visibility       Visibility      @default(PUBLIC)
+  oneTimeDownload  Boolean         @default(true)
+  uploadType       UploadType      @default(CENTRALIZED)
+  creatorId        String
+  bannerUrl        String?
+  creator          User            @relation(fields: [creatorId], references: [id])
+  purchases        Purchase[]
+}
+
+model Purchase {
+  id                   String         @id @default(uuid())
+  createdAt            DateTime       @default(now())
+  productId            String
+  transactionSignature String
+  downloadToken        String?        @unique
+  status               PurchaseStatus @default(PENDING)
+  buyer                String
+  product              Product        @relation(fields: [productId], references: [id])
+}
+
+enum ProductCategory {
+  IMAGE
+  VIDEO
+  AUDIO
+  DOCUMENT
+  SOFTWARE
+  ARCHIVE
+  OTHER
+}
+
+enum Visibility {
+  PUBLIC
+  PRIVATE
+  UNLISTED
+}
+
+enum UploadType {
+  CENTRALIZED
+  DECENTRALIZED
+}
+
+enum PurchaseStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  DOWNLOADED
+}
