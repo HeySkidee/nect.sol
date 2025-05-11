@@ -12,13 +12,22 @@ interface FileUploadProps {
   endpoint: "mediaUploader";
   category?: FileCategory;
   uploadType?: UploadType;
+  onBeginUpload?: () => void;
 }
 
-function FileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRALIZED' }: FileUploadProps) {
+function FileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRALIZED', onBeginUpload }: FileUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [currentFileName, setCurrentFileName] = useState<string>("");
   const [originalFileName, setOriginalFileName] = useState<string>("");
+
+  const resetUpload = () => {
+    onChange("", "", "");
+    setOriginalFileName("");
+    setIsUploading(false);
+    setUploadProgress(0);
+    setCurrentFileName("");
+  };
 
   const getFileType = (url: string) => {
     if (category === 'IMAGE') return 'image';
@@ -40,26 +49,42 @@ function FileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRAL
 
     if (fileType === 'image') {
       return (
-        <div className="relative w-full aspect-video">
-          <img 
-            src={value} 
-            alt={displayName} 
-            className="rounded-md w-full h-full object-contain" 
-          />
-          <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-sm truncate">
-            {displayName}
+        <div className="relative w-full">
+          <div className="relative w-full max-h-[400px] overflow-hidden rounded-md">
+            <img 
+              src={value} 
+              alt={displayName} 
+              className="w-full h-full object-contain" 
+            />
+            <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-white p-2 text-sm truncate">
+              {displayName}
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={resetUpload}
+            className="absolute -top-2 -right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg"
+          >
+            <XIcon className="h-4 w-4" />
+          </button>
         </div>
       );
     }
 
     return (
-      <div className="flex items-center gap-3 p-4 rounded-lg border bg-gray-50">
+      <div className="flex items-center gap-3 p-4 rounded-lg border bg-gray-50 relative">
         <FileIcon className="h-8 w-8 text-gray-400" />
         <div className="flex flex-col">
-          <span className="text-sm font-medium">File uploaded</span>
+          <span className="text-sm font-medium text-gray-700">File uploaded</span>
           <span className="text-xs text-gray-500">{displayName}</span>
         </div>
+        <button
+          type="button"
+          onClick={resetUpload}
+          className="absolute -top-2 -right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors shadow-lg"
+        >
+          <XIcon className="h-4 w-4" />
+        </button>
       </div>
     );
   };
@@ -68,16 +93,6 @@ function FileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRAL
     return (
       <div className="flex flex-col gap-4">
         {renderPreview()}
-        <button
-          type="button"
-          onClick={() => {
-            onChange("", "", "");
-            setOriginalFileName("");
-          }}
-          className="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600 transition-colors w-fit"
-        >
-          <XIcon className="h-4 w-4" />
-        </button>
       </div>
     );
   }
@@ -90,6 +105,7 @@ function FileUpload({ endpoint, onChange, value, category, uploadType = 'CENTRAL
           setIsUploading(true);
           setCurrentFileName(fileName);    
           setOriginalFileName(fileName);
+          onBeginUpload?.();
         }}
         onUploadProgress={(progress) => {
           setUploadProgress(progress);

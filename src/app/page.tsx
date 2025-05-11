@@ -18,7 +18,7 @@ export default function Home() {
                 <h1>ANONYMOUSLY!</h1>
               </div>
 
-              <div className="text-xl font-medium w-[80%]">
+              <div className="text-xl font-medium w-[80%] mt-4">
                 <h3>
                   {/* Sell digital assets anonymously. Get instant one-time download links after payment via Solana.  */}
                   Pay via Solana. Get instant one-time download link.
@@ -32,7 +32,7 @@ export default function Home() {
             <div className="flex w-full justify-between h-[38%] gap-3">
               {/* lower left */}
               <Link href="/create" className="w-1/2">
-                <div className="w-full bg-[#3ffd7e] h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-[#00ff40] transition-colors">
+                <div className="w-full bg-[#3ffd7e] h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-[#00ff40] transition-colors hover:text-white">
                   <div>
                     <h1 className="text-7xl font-bold">
                       START💸
@@ -45,7 +45,7 @@ export default function Home() {
               </Link>
               {/* lower right */}
               <Link href="/marketplace" className="w-1/2">
-                <div className="w-full bg-fuchsia-300 h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-fuchsia-400 transition-colors">
+                <div className="w-full bg-fuchsia-300 h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-fuchsia-400 transition-colors hover:text-white">
                   <div>
                     <h1 className="text-7xl font-bold">
                       START 🛍️
