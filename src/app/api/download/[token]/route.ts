@@ -7,7 +7,6 @@ export async function GET(
 ) {
     const resolvedParams = await params;
     try {
-        // Find the purchase with the download token
         const purchase = await prisma.purchase.findFirst({
             where: {
                 downloadToken: resolvedParams.token,
@@ -25,7 +24,6 @@ export async function GET(
             );
         }
 
-        // Return only the metadata (not the actual file URL)
         return NextResponse.json({
             fileName: purchase.product.name,
             fileType: purchase.product.fileType

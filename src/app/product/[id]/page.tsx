@@ -20,6 +20,7 @@ import {
     DrawerFooter,
     DrawerClose,
 } from "@/components/ui/drawer";
+import DownloadModal from '@/components/DownloadModal';
 
 interface Product {
     id: string;
@@ -64,6 +65,12 @@ export default function ProductPage() {
     const [qrReference, setQrReference] = useState<string | null>(null);
     const [showPaymentDrawer, setShowPaymentDrawer] = useState(false);
     const [showQRDrawer, setShowQRDrawer] = useState(false);
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
+    const [downloadInfo, setDownloadInfo] = useState<{
+        token: string;
+        fileName: string;
+        fileType: string;
+    } | null>(null);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -124,18 +131,18 @@ export default function ProductPage() {
         try {
             setIsProcessing(true);
 
-            // Convert USD price to SOL
+            // Calculate SOL amount
             const solAmount = product.price / solPrice;
             const lamports = Math.round(solAmount * LAMPORTS_PER_SOL);
 
-            // Create connection to devnet
+            // Create connection
             const connection = new Connection(process.env.NEXT_PUBLIC_RPC_URL || 'https://api.devnet.solana.com');
             
-            // Get latest blockhash
-            const { blockhash } = await connection.getLatestBlockhash();
-
             // Create transaction
-            const transaction = new Transaction().add(
+            const transaction = new Transaction();
+            
+            // Add transfer instruction
+            transaction.add(
                 SystemProgram.transfer({
                     fromPubkey: publicKey,
                     toPubkey: new PublicKey(product.creator.publicKey),
@@ -143,12 +150,22 @@ export default function ProductPage() {
                 })
             );
 
-            transaction.recentBlockhash = blockhash;
-            transaction.feePayer = publicKey;
-
             // Send transaction
             const signature = await sendTransaction(transaction, connection);
             console.log('Transaction sent:', signature);
+
+            // Wait for confirmation using getSignatureStatus
+            let status = await connection.getSignatureStatus(signature);
+            let retries = 30;
+            while (retries > 0 && !status.value?.confirmationStatus) {
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                status = await connection.getSignatureStatus(signature);
+                retries--;
+            }
+
+            if (!status.value?.confirmationStatus) {
+                throw new Error('Transaction failed to confirm');
+            }
 
             // Record purchase
             const purchaseResponse = await fetch('/api/purchase', {
@@ -164,10 +181,26 @@ export default function ProductPage() {
             });
 
             if (!purchaseResponse.ok) {
-                throw new Error('Failed to record purchase');
+                const errorData = await purchaseResponse.json();
+                throw new Error(errorData.error || 'Failed to record purchase');
             }
 
-            // Update stock quantity
+            const purchaseData = await purchaseResponse.json();
+
+            // Get download information
+            const downloadResponse = await fetch(`/api/download/${purchaseData.downloadToken}`);
+            if (!downloadResponse.ok) {
+                throw new Error('Failed to get download link');
+            }
+
+            const downloadData = await downloadResponse.json();
+            setDownloadInfo({
+                token: purchaseData.downloadToken,
+                fileName: downloadData.fileName,
+                fileType: downloadData.fileType
+            });
+            
+            // Update stock quantity in UI
             if (!product.isUnlimitedStock && product.stockQuantity !== null) {
                 setProduct(prev => prev ? {
                     ...prev,
@@ -176,16 +209,10 @@ export default function ProductPage() {
             }
 
             toast.success('Purchase successful!', { id: toastId });
-
+            setShowDownloadModal(true);
         } catch (error: any) {
             console.error('Payment error:', error);
-            toast.dismiss(toastId);
-            
-            if (error.message?.includes('User rejected')) {
-                toast.error('Transaction cancelled by user');
-            } else {
-                toast.error('Payment failed. Please try again.');
-            }
+            toast.error(error.message || 'Payment failed. Please try again.', { id: toastId });
         } finally {
             setIsProcessing(false);
         }
@@ -280,7 +307,7 @@ export default function ProductPage() {
                                 Buy Now
                             </button>
                         </DrawerTrigger>
-                        <DrawerContent side="bottom">
+                        <DrawerContent side="bottom" aria-describedby={undefined}>
                             <DrawerHeader>
                                 <DrawerTitle>Choose Payment Method</DrawerTitle>
                             </DrawerHeader>
@@ -320,7 +347,7 @@ export default function ProductPage() {
 
                     {/* QR Code Drawer */}
                     <Drawer open={showQRDrawer} onOpenChange={setShowQRDrawer}>
-                        <DrawerContent side="bottom">
+                        <DrawerContent side="bottom" aria-describedby={undefined}>
                             <DrawerHeader>
                                 <DrawerTitle>Scan to Pay with Solana Pay</DrawerTitle>
                             </DrawerHeader>
@@ -352,6 +379,16 @@ export default function ProductPage() {
                     </div>
                 </div>
             </div>
+
+            {showDownloadModal && downloadInfo && (
+                <DownloadModal
+                    isOpen={showDownloadModal}
+                    onClose={() => setShowDownloadModal(false)}
+                    downloadToken={downloadInfo.token}
+                    fileName={downloadInfo.fileName}
+                    fileType={downloadInfo.fileType}
+                />
+            )}
         </div>
     );
 } 

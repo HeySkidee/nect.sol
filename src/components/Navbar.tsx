@@ -3,9 +3,15 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { prisma } from "@/lib/prisma";
+import dynamic from 'next/dynamic';
+
+// Dynamically import WalletMultiButton with ssr disabled
+const WalletMultiButtonDynamic = dynamic(
+    () => import('@solana/wallet-adapter-react-ui').then(mod => mod.WalletMultiButton),
+    { ssr: false }
+);
 
 function Navbar() {
     const { connected, publicKey } = useWallet();
@@ -81,7 +87,7 @@ function Navbar() {
                             </Link>
                         )}
                         
-                        <WalletMultiButton className="!bg-emerald-800 hover:!bg-emerald-700 transition-colors" />
+                        <WalletMultiButtonDynamic className="!bg-emerald-500 hover:!bg-emerald-600 !rounded-lg" />
                     </div>
                 </div>
             </div>

@@ -7,7 +7,6 @@ export async function GET(
 ) {
     const resolvedParams = await params;
     try {
-        // Find the purchase with the download token
         const purchase = await prisma.purchase.findFirst({
             where: {
                 downloadToken: resolvedParams.token,
@@ -25,19 +24,15 @@ export async function GET(
             );
         }
 
-        // Fetch the file from UploadThing
         const fileResponse = await fetch(purchase.product.fileUrl);
         if (!fileResponse.ok) {
             throw new Error('Failed to fetch file');
         }
 
-        // Get the content type from the response
         const contentType = fileResponse.headers.get('content-type') || 'application/octet-stream';
-        
-        // Create filename with extension from the stored fileType
         const fileName = `${purchase.product.name}.${purchase.product.fileType}`;
 
-        // If it's a one-time download, invalidate the token
+        // Handle one-time downloads
         if (purchase.product.oneTimeDownload) {
             await prisma.purchase.update({
                 where: { id: purchase.id },
@@ -48,7 +43,6 @@ export async function GET(
             });
         }
 
-        // Stream the file to the client
         return new NextResponse(fileResponse.body, {
             headers: {
                 'Content-Type': contentType,
