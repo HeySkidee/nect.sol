@@ -12,6 +12,7 @@
   "dependencies": {
     "@prisma/client": "^6.7.0",
     "@radix-ui/react-dialog": "^1.1.13",
+    "@radix-ui/react-dropdown-menu": "^2.1.14",
     "@radix-ui/react-slot": "^1.2.2",
     "@solana/pay": "^0.2.5",
     "@solana/wallet-adapter-base": "^0.9.26",
