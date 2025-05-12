@@ -81,7 +81,7 @@ function Navbar() {
                         <Link href="/marketplace" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black">   
                             MARKETPLACE
                         </Link>
-                        <Link href="https://youtube.com" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black">
+                        <Link href="https://youtu.be/WdVtl4wed58" target="_blank" className="text-lg px-6 py-2.5 rounded-full transition-all duration-300 hover:bg-fuchsia-300 hover:text-black">
                             WATCH DEMO
                         </Link>
                     </div>

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Github, Twitter } from "lucide-react";
 
 export default function Home() {
   return (
@@ -82,6 +83,84 @@ export default function Home() {
             <Image src="/anon-1.jpg" alt="nect" width={1000} height={1000} className="w-full h-full object-cover rounded-4xl" />
           </div>
         </div>
+
+        {/* Video Demo Section */}
+        <div className="mt-20 mb-20 bg-white rounded-3xl border-2 border-[#dddddd] p-8">
+          <h2 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter text-center mb-12">
+            1 Minute Demo
+          </h2>
+          <div className="aspect-video w-full max-w-[1200px] mx-auto rounded-3xl overflow-hidden border-[5px] border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/WdVtl4wed58"
+              title="NECT Demo Video"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+              className="w-full h-full"
+            ></iframe>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className="bg-white rounded-3xl border-2 border-[#dddddd] p-8">
+          <div className="flex flex-col gap-8">
+            {/* CTA Section */}
+            <div className="bg-[#f7fa3e] px-10 py-8 rounded-3xl">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="space-y-4">
+                  <h2 className="text-5xl font-bold text-black">Start Shopping Now</h2>
+                  <p className="text-black/80 text-xl max-w-2xl">
+                    Experience the future of digital commerce on Solana
+                    <br />
+                    secure, decentralized, and fee-free transactions for creators and buyers.
+                  </p>
+                  <Link href="/marketplace">
+                    <button className="bg-black text-white px-8 py-4 rounded-[10px] font-medium text-2xl cursor-pointer hover:bg-fuchsia-300 hover:text-black transition-colors">
+                      Go to Marketplace
+                    </button>
+                  </Link>
+                </div>
+                <div className="w-full max-w-xs">
+                  <div className="aspect-square rounded-2xl backdrop-blur-sm flex items-center justify-center">
+                    <Image 
+                      src="/nect-logo.png" 
+                      alt="NECT" 
+                      width={500} 
+                      height={500}
+                      className="w-full h-auto" 
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Links and Social */}
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-6 px-4">
+              <div className="text-lg text-gray-600">
+                © 2025 NECT. All rights reserved.
+              </div>
+              <div className="flex items-center gap-4">
+                <Link 
+                  href="https://twitter.com/HeySkidee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 hover:text-[#EE2B69] transition-colors flex items-center gap-2"
+                >
+                  <Twitter size={24} /> Twitter
+                </Link>
+                <Link 
+                  href="https://github.com/HeySkidee"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 hover:text-[#EE2B69] transition-colors flex items-center gap-2 "
+                >
+                  <Github size={24} /> Github
+                </Link>
+              </div>
+            </div>
+          </div>
+        </footer>
       </div>
     </>
   );
