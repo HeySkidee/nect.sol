@@ -244,7 +244,7 @@ export default function EditProductPage() {
   }
 
   return (
-    <div className="w-[97%] mx-auto my-6">
+    <div className="w-[97%] mx-auto my-10">
       <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#dddddd]">
         <div className="flex flex-col gap-6">
           {/* Header */}
@@ -403,7 +403,7 @@ export default function EditProductPage() {
                 {/* Stock Management */}
                 <div>
                   <label className="block text-xl font-bold mb-2">Stock</label>
-                  <div className="flex items-center gap-6">
+                  <div className="flex items-center gap-6 flex-col sm:flex-row">
                     <label className="flex items-center gap-2 cursor-pointer">
                       <input
                         type="checkbox"

@@ -317,41 +317,42 @@ export default function ProductPage() {
                                         {isProcessing ? 'Processing...' : 'Buy Now'}
                                     </button>
                                 </DrawerTrigger>
-                                <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[50vh] rounded-t-[30px] border-t-0">
-                                    <div className="mx-auto w-full max-w-4xl flex items-center justify-center flex-col ">
-                                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-6 " />
-                                        <DrawerHeader className="text-center pb-8">
-                                            <DrawerTitle className="text-5xl font-bold mb-3">Choose Payment Method</DrawerTitle>
+                                <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[90vh] sm:h-[50vh] rounded-t-[30px] border-t-0">
+                                    <div className="mx-auto w-full max-w-4xl flex items-center justify-center flex-col">
+                                        <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-4" />
+                                        <DrawerHeader className="text-center pb-4 sm:pb-8">
+                                            <DrawerTitle className="text-3xl sm:text-5xl font-bold mb-3">Choose Payment Method</DrawerTitle>
                                         </DrawerHeader>
-                                        <div className="flex gap-6 w-full justify-center py-4 px-4">
+                                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full justify-center py-4 px-4">
                                             {/* Wallet Payment */}
                                             <div
-                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-6 w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
+                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-4 sm:p-6 w-full sm:w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
                                                 onClick={() => {
                                                     setShowPaymentDrawer(false);
                                                     handlePayment();
                                                 }}
                                             >
-                                                <WalletMultiButton className="w-16 h-16 mb-9" />
-                                                <span className="font-bold text-3xl text-center mb-2 mt-3">Wallet</span>
-                                                <span className="text-base text-gray-600 text-center">Connect & pay directly with your wallet</span>
+                                                <WalletMultiButton className="w-12 h-12 sm:w-16 sm:h-16 mb-6 sm:mb-9" />
+                                                <span className="font-bold text-2xl sm:text-3xl text-center mb-2 mt-3">Wallet</span>
+                                                <span className="text-sm sm:text-base text-gray-600 text-center">Connect & pay directly with your wallet</span>
                                                 <div className="mt-4 bg-[#f7fa3e] px-4 py-2 rounded-full text-sm font-medium">
                                                     Recommended
                                                 </div>
                                             </div>
                                             {/* QR Payment */}
                                             <div
-                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-6 w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
+                                                className="flex flex-col items-center justify-center bg-white border-[5px] border-black rounded-[22px] p-4 sm:p-6 w-full sm:w-[45%] transition-all duration-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 hover:-translate-y-1 cursor-pointer"
                                                 onClick={() => {
                                                     setShowPaymentDrawer(false);
                                                     setTimeout(() => setShowQRDrawer(true), 200);
                                                 }}
                                             >
-                                                <div className="w-16 h-16 mb-3 flex items-center justify-center">
-                                                    <QRCodeSVG value={qrCode} size={56} />
+                                                <div className="w-12 h-12 sm:w-16 sm:h-16 mb-3 flex items-center justify-center">
+                                                    <QRCodeSVG value={qrCode} size={48} className="sm:hidden" />
+                                                    <QRCodeSVG value={qrCode} size={56} className="hidden sm:block" />
                                                 </div>
-                                                <span className="font-bold text-3xl text-center mb-2">Solana Pay</span>
-                                                <span className="text-base text-gray-600 text-center">Scan QR code with your mobile wallet</span>
+                                                <span className="font-bold text-2xl sm:text-3xl text-center mb-2">Solana Pay</span>
+                                                <span className="text-sm sm:text-base text-gray-600 text-center">Scan QR code with your mobile wallet</span>
                                                 <div className="mt-4 bg-fuchsia-200 px-4 py-2 rounded-full text-sm font-medium">
                                                     Mobile friendly
                                                 </div>
@@ -375,16 +376,17 @@ export default function ProductPage() {
 
                         {/* QR Code Drawer */}
                         <Drawer open={showQRDrawer} onOpenChange={setShowQRDrawer}>
-                            <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[50vh] rounded-t-[30px] border-t-0">
+                            <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[90vh] sm:h-[50vh] rounded-t-[30px] border-t-0">
                                 <div className="mx-auto w-full max-w-2xl">
                                     <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-4" />
                                     <DrawerHeader className="text-center pb-2">
-                                        <DrawerTitle className="text-5xl font-bold mb-3">Scan & Pay</DrawerTitle>
-                                        <p className="text-xl text-gray-600">Use your mobile wallet (ex: phantom app) to complete the payment</p>
+                                        <DrawerTitle className="text-3xl sm:text-5xl font-bold mb-2 sm:mb-3">Scan & Pay</DrawerTitle>
+                                        <p className="text-lg sm:text-xl text-gray-600">Use your mobile wallet (ex: phantom app) to complete the payment</p>
                                     </DrawerHeader>
                                     <div className="flex justify-center py-4">
-                                        <div className="bg-white border-[5px] border-black rounded-[22px] p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 transition-colors">
-                                            <QRCodeSVG value={qrCode} size={240} />
+                                        <div className="bg-white border-[5px] border-black rounded-[22px] p-4 sm:p-8 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-gray-50 transition-colors">
+                                            <QRCodeSVG value={qrCode} size={200} className="sm:hidden" />
+                                            <QRCodeSVG value={qrCode} size={240} className="hidden sm:block" />
                                         </div>
                                     </div>
                                 </div>

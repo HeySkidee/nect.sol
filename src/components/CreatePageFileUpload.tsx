@@ -190,7 +190,7 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
         <p className="text-xl text-gray-600 mb-6">
           or click to browse from your computer
         </p>
-        <div className="flex gap-3 flex-wrap justify-center mb-8">
+        <div className="hidden sm:flex gap-3 flex-wrap justify-center mb-8">
           {category === 'IMAGE' ? (
             <FileType icon={ImageIcon} text="Images" />
           ) : (

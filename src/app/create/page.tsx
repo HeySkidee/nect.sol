@@ -147,12 +147,12 @@ export default function Create() {
 
   if (!connected) {
     return (
-      <div className="w-[97%] mx-auto my-6">
+      <div className="w-[97%] mx-auto my-10">
         <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#dddddd]">
           <div className="flex flex-col gap-8">
             {/* Hero Section */}
-            <div className="bg-[#EE2B69] rounded-3xl p-16 text-center text-white">
-              <h1 className="text-7xl font-black tracking-tight mb-4">
+            <div className="bg-[#EE2B69] rounded-3xl p-7 sm:p-16 text-center text-white">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-4">
                 START SELLING DIGITAL GOODS
               </h1>
               <p className="text-2xl font-medium max-w-3xl mx-auto mb-8">
@@ -220,7 +220,7 @@ export default function Create() {
                     <br />
                     Secure, decentralized, and fee-free transactions.
                   </p>
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 flex-col sm:flex-row">
                     <WalletMultiButton className="!bg-[#ff99cc] !text-black hover:!bg-[#ff80bf] !transition-colors !py-3 !px-6 !rounded-full !font-medium !text-lg" />
                     <Link href="/marketplace">
                       <button className="bg-black text-white py-2.5 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
@@ -250,12 +250,12 @@ export default function Create() {
 
   return (
     <>
-      <div className="w-[97%] mx-auto my-6">
+      <div className="w-[97%] mx-auto my-10">
         <div className="bg-white p-6 md:p-8 rounded-3xl border-2 border-[#dddddd]">
           <div className="flex flex-col gap-6">
             {/* Header */}
-            <div className="bg-[#EE2B69] rounded-3xl p-16 text-center text-white">
-              <h1 className="text-7xl font-black tracking-tight mb-4">
+            <div className="bg-[#EE2B69] rounded-3xl p-7 sm:p-16 text-center text-white">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl font-black tracking-tight mb-4">
                 SELL YOUR DIGITAL GOODS
               </h1>
               <p className="text-2xl font-medium max-w-3xl mx-auto">
