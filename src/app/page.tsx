@@ -86,7 +86,7 @@ export default function Home() {
 
         {/* Video Demo Section */}
         <div className="mt-20 mb-20 bg-white rounded-3xl border-2 border-[#dddddd] p-8">
-          <h2 className="text-6xl sm:text-7xl md:text-8xl font-black tracking-tighter text-center mb-12">
+          <h2 className="text-6xl text-white text-shadow-2xs md:text-shadow-md md:text-black sm:text-7xl md:text-8xl font-black tracking-tighter text-center mb-12">
             1 Minute Demo
           </h2>
           <div className="aspect-video w-full max-w-[1200px] mx-auto rounded-3xl overflow-hidden border-[5px] border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
