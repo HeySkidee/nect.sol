@@ -7,6 +7,9 @@ export async function GET() {
       where: {
         visibility: 'PUBLIC'
       },
+      orderBy: {
+        createdAt: 'asc'
+      },
       select: {
         id: true,
         name: true,
