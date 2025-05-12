@@ -1,11 +1,7 @@
-'use client';
-
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import WalletContextProvider from "@/components/WalletProvider";
-import Navbar from "@/components/Navbar";
-import { Toaster } from 'react-hot-toast';
-import { useEffect, useState } from 'react';
+import ClientLayout from "@/components/ClientLayout";
+import type { Metadata } from "next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,31 +13,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+export const metadata: Metadata = {
+  title: 'NECT.SOL',
+  description: 'Buy and sell digital goods anonymously - Powered by Solana',
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/nect-logo.png',
+  }
+};
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <html lang="en">
       <body suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <WalletContextProvider>
-          {mounted && (
-            <>
-              <Navbar />
-              <main className="min-h-screen">
-                {children}
-              </main>
-            </>
-          )}
-          <Toaster />
-        </WalletContextProvider>
+        <ClientLayout>
+          {children}
+        </ClientLayout>
       </body>
     </html>
   );
