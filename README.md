@@ -1,5 +1,7 @@
 # [Nect](https://nect-sol.vercel.app/)
 
+Experience the future of digital commerce on Solana
+
 Buy and sell digital assets anonymously, earn money in Solana.
 
 ## Demo Video
@@ -17,6 +19,6 @@ Buy and sell digital assets anonymously, earn money in Solana.
 ## Links
 
 - [Website](https://nect-sol.vercel.app/)
-- [Browse Marketplace](https://nect.vercel.app/marketplace)
-- [Start Selling](https://nect.vercel.app/create)
+- [Browse Marketplace](https://nect-sol.vercel.app/marketplace)
+- [Start Selling](https://nect-sol.vercel.app/create)
 - [Demo](https://youtu.be/WdVtl4wed58)
