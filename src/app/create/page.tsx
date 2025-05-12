@@ -223,7 +223,7 @@ export default function Create() {
                   <div className="flex gap-4 flex-col sm:flex-row">
                     <WalletMultiButton className="!bg-[#ff99cc] !text-black hover:!bg-[#ff80bf] !transition-colors !py-3 !px-6 !rounded-full !font-medium !text-lg" />
                     <Link href="/marketplace">
-                      <button className="bg-black text-white py-2.5 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
+                      <button className="cursor-pointer bg-black text-white py-2.5 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
                         Browse Marketplace
                       </button>
                     </Link>
@@ -623,7 +623,7 @@ export default function Create() {
                         secure, decentralized, and fee-free transactions for creators and buyers.
                       </p>
                       <Link href="/marketplace">
-                        <button className="bg-black text-white py-3 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
+                        <button className="cursor-pointer bg-black text-white py-3 px-6 rounded-full font-medium text-lg hover:opacity-90 transition-opacity">
                           Go to Marketplace
                         </button>
                       </Link>

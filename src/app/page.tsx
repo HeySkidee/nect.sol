@@ -6,30 +6,43 @@ export default function Home() {
     <>
       <div className="w-[97%] mx-auto mt-9 sm:mt-10 pb-12 rounded-lg h-[calc(100vh-6rem)]">
         <div className="flex flex-col w-full h-full justify-between gap-3 lg:flex-row">
-          
+
           <div className="w-full bg-white flex flex-col gap-3">
             {/* upper */}
             <div className="min-h-[70%] sm:min-h-[60%] md:min-h-[61.1%] border w-full rounded-4xl bg-[#f7fa3e] flex flex-col justify-between p-10">
               {/* bg-[#dbfa51] */}
               {/* <div className="h-[62%] border w-full rounded-4xl bg-[#dddddd] flex flex-col justify-between p-10"> */}
-              <div className="w-full h-full text-4xl sm:text-5xl md:text-8xl font-bold">
+
+              {/* <div className="w-full h-full text-4xl sm:text-5xl md:text-8xl font-bold">
                 <h1>BUY AND SELL</h1>
                 <h1>DIGITAL GOODS</h1>
                 <h1>ANONYMOUSLY!</h1>
+              </div> */}
+
+              <div className="w-full h-full text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter">
+                <h1 className="leading-[0.9] mb-2">BUY AND SELL</h1>
+                <h1 className="leading-[0.9] mb-2">DIGITAL GOODS</h1>
+                <h1 className="leading-[0.9] ">ANONYMOUSLY!</h1>
               </div>
 
-              <div className="text-xl font-medium w-[90%] xs:w-[80%] mt-4 mb-5 sm:mb-10 md:mb-0">
+              <div className="text-2xl font-medium w-[90%] xs:w-[80%] mt-4 mb-5 sm:mb-10 md:mb-0">
                 <h3>
                   {/* Sell digital assets anonymously. Get instant one-time download links after payment via Solana.  */}
-                  Pay via Solana. 
+                  Pay via Solana.
                   <br className="block sm:hidden" />
-                  Get instant one-time download link.
-                  <br />
-                  No platform fees. 
+                  <span className="sm:ml-1">
+                    Get instant one-time download link.
+                  </span>
+                  <br />                 
+                    No platform fees.
                   <br className="block sm:hidden" />
-                  No middlemen. 
+                  <span className="sm:ml-1.5">
+                    No middlemen.
+                  </span>
                   <br className="block sm:hidden" />
-                  Just pure value exchange!
+                  <span className="sm:ml-1.5">
+                    Just pure value exchange!
+                  </span>
                 </h3>
               </div>
             </div>
