@@ -63,7 +63,7 @@ export default function DownloadModal({ isOpen, onClose, downloadToken, fileName
                         className="text-black hover:text-gray-700 transition-colors"
                         disabled={isDownloading}
                     >
-                        <XIcon className="w-6 h-6" />
+                        <XIcon className="w-6 h-6 cursor-pointer" />
                     </button>
                 </div>
 

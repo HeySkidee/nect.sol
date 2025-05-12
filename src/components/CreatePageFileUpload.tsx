@@ -8,9 +8,9 @@ import { FileCategory, UploadType } from '@/types';
 import { CodeIcon, ArchiveIcon } from "lucide-react";
 
 interface CreatePageFileUploadProps {
-  onChange: (url: string, fileType: string, fileName?: string) => void;
+  onChange: (url: string, fileType?: string) => void;
   value: string;
-  endpoint: "mediaUploader";
+  endpoint: "mediaUploader" | "imageUploader";
   category?: FileCategory;
   uploadType?: UploadType;
   onBeginUpload?: () => void;
@@ -33,7 +33,7 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
   const uploadDropzoneRef = useRef<HTMLDivElement>(null);
 
   const resetUpload = () => {
-    onChange("", "", "");
+    onChange("", "");
     setOriginalFileName("");
     setIsUploading(false);
     setUploadProgress(0);
@@ -150,7 +150,7 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
             if (res?.[0]) {
               const fileName = res[0].name;
               const fileType = fileName.split('.').pop() || '';
-              onChange(res[0].ufsUrl, fileType, fileName);
+              onChange(res[0].ufsUrl, fileType);
               onClientUploadComplete?.();
             }
           }}
@@ -185,10 +185,10 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
           <Upload className="size-12 text-white" />
         </div>
         <h3 className="text-3xl font-bold text-black mb-2">
-          Drop your {category === 'IMAGE' ? 'image' : 'files'} here
+          Select your {category === 'IMAGE' ? 'image' : 'files'}
         </h3>
         <p className="text-xl text-gray-600 mb-6">
-          or click to browse from your computer
+          Click to browse from your computer
         </p>
         <div className="hidden sm:flex gap-3 flex-wrap justify-center mb-8">
           {category === 'IMAGE' ? (
@@ -199,7 +199,7 @@ function CreatePageFileUpload({ endpoint, onChange, value, category, uploadType 
               <FileType icon={VideoIcon} text="Videos" />
               <FileType icon={AudioWaveformIcon} text="Audio" />
               <FileType icon={FileIcon} text="Documents" />
-              <FileType icon={CodeIcon} text="Software" />
+              {/* <FileType icon={CodeIcon} text="Software" /> */}
               <FileType icon={ArchiveIcon} text="Archives" />
             </>
           )}

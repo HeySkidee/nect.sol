@@ -287,7 +287,7 @@ export default function EditProductPage() {
                     <span className="text-gray-500 text-base ml-2">Recommended size: 1200x630px</span>
                   </label>
                   <CreatePageFileUpload
-                    endpoint="mediaUploader"
+                    endpoint="imageUploader"
                     value={formData.bannerUrl}
                     category="IMAGE"
                     onChange={(url) => {

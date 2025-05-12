@@ -284,12 +284,12 @@ export default function Create() {
                   value={formData.fileUrl}
                   category={formData.category}
                   uploadType={formData.uploadType}
-                  onChange={(url: string, fileType: string) => {
-                    const category = detectFileCategory(fileType);
+                  onChange={(url: string, fileType?: string) => {  
+                    const category = detectFileCategory(fileType || '');
                     setFormData(prev => ({
                       ...prev,
                       fileUrl: url,
-                      fileType,
+                      fileType: fileType || '',
                       category
                     }));
                     setIsFileSelected(!!url);
@@ -363,7 +363,7 @@ export default function Create() {
                         <span className="text-gray-500 text-base ml-2">Recommended size: 1200x630px</span>
                       </label>
                       <CreatePageFileUpload
-                        endpoint="mediaUploader"
+                        endpoint="imageUploader"
                         value={formData.bannerUrl}
                         category="IMAGE"
                         onChange={(url) => {
