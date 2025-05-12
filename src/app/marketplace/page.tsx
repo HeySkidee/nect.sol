@@ -125,7 +125,7 @@ export default function MarketplacePage() {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category === activeCategory ? null : category)}
-                className={`px-6 py-2.5 rounded-full text-base font-medium transition-all ${
+                className={`px-6 py-2.5 cursor-pointer rounded-full text-base font-medium transition-all ${
                   category === activeCategory
                     ? "bg-[#f7fa3e] text-black"
                     : "bg-gray-100 text-gray-700 hover:bg-gray-200"
