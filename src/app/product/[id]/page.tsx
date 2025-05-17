@@ -317,11 +317,11 @@ export default function ProductPage() {
                                         {isProcessing ? 'Processing...' : 'Buy Now'}
                                     </button>
                                 </DrawerTrigger>
-                                <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[90vh] sm:h-[50vh] rounded-t-[30px] border-t-0">
+                                <DrawerContent side="bottom" className="fixed bottom-0 left-0 right-0 h-[75vh] sm:h-120 rounded-t-[30px] border-t-0">
                                     <div className="mx-auto w-full max-w-4xl flex items-center justify-center flex-col">
                                         <div className="w-12 h-1.5 bg-gray-300 rounded-full mx-auto mb-4 mt-4" />
                                         <DrawerHeader className="text-center pb-4 sm:pb-8">
-                                            <DrawerTitle className="text-3xl sm:text-5xl font-bold mb-3">Choose Payment Method</DrawerTitle>
+                                            <DrawerTitle className="text-3xl sm:text-[2.5vw] font-bold mb-3">Choose Payment Method</DrawerTitle>
                                         </DrawerHeader>
                                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full justify-center py-4 px-4">
                                             {/* Wallet Payment */}

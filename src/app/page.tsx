@@ -20,13 +20,13 @@ export default function Home() {
                 <h1>ANONYMOUSLY!</h1>
               </div> */}
 
-              <div className="w-full h-full text-4xl sm:text-5xl md:text-8xl font-black tracking-tighter">
+              <div className="w-full h-full text-4xl sm:text-5xl md:text-[4.5vw] font-black tracking-tighter">
                 <h1 className="leading-[0.9] mb-2">BUY AND SELL</h1>
                 <h1 className="leading-[0.9] mb-2">DIGITAL GOODS</h1>
                 <h1 className="leading-[0.9] ">ANONYMOUSLY!</h1>
               </div>
 
-              <div className="text-2xl font-medium w-[90%] xs:w-[80%] mt-4 mb-5 sm:mb-10 md:mb-0">
+              <div className="text-base sm:text-lg md:text-xl lg:text-[1.25vw] font-medium w-[90%] xs:w-[80%] mt-4 mb-5 sm:mb-10 md:mb-0">
                 <h3>
                   {/* Sell digital assets anonymously. Get instant one-time download links after payment via Solana.  */}
                   Pay via Solana.
@@ -54,10 +54,10 @@ export default function Home() {
               <Link href="/create" className="w-1/2">
                 <div className="w-full bg-[#3ffd7e] h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-[#00ff40] transition-colors hover:text-white">
                   <div>
-                    <h1 className="text-lg xs:text-3xl sm:text-5xl md:text-7xl font-bold">
+                    <h1 className="text-lg xs:text-3xl sm:text-5xl md:text-[3.72vw] font-bold">
                       START💸
                     </h1>
-                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-7xl font-bold">
+                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-[3.72vw] font-bold">
                       SELLING
                     </h1>
                   </div>
@@ -67,10 +67,10 @@ export default function Home() {
               <Link href="/marketplace" className="w-1/2">
                 <div className="w-full bg-fuchsia-300 h-full rounded-4xl flex flex-col justify-end p-10 cursor-pointer hover:bg-fuchsia-400 transition-colors hover:text-white">
                   <div>
-                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-7xl font-bold">
+                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-[3.72vw] font-bold">
                       START 🛍️
                     </h1>
-                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-7xl font-bold">
+                    <h1 className="text-xl xs:text-3xl sm:text-5xl md:text-[3.72vw] font-bold">
                       SHOPPING
                     </h1>
                   </div>
@@ -79,7 +79,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="min-w-[99%] md:min-w-[800px] bg-white h-[80%] md:h-[100%] pb-5 sm:pb-0">
+          <div className="min-w-[99%] md:min-w-[41.7vw] bg-white h-[80%] md:h-[100%] pb-5 sm:pb-0">
             <Image src="/anon-1.jpg" alt="nect" width={1000} height={1000} className="w-full h-full object-cover rounded-4xl" />
           </div>
         </div>
@@ -93,7 +93,7 @@ export default function Home() {
             <iframe
               width="100%"
               height="100%"
-              src="https://www.youtube.com/embed/WdVtl4wed58"
+              src="https://www.youtube.com/embed/WdVtl4wed58?vq=hd1080"
               title="NECT Demo Video"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
